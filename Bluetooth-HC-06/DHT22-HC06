@@ -1,0 +1,42 @@
+#include <SoftwareSerial.h>
+#include "DHT.h"
+#define DHTPIN 2 
+#define DHTTYPE DHT11 
+DHT dht(DHTPIN, DHTTYPE); 
+#define TxD 3
+#define RxD 4
+#define KEY 4
+#define VCC 5
+int valor;
+
+
+SoftwareSerial Blue(TxD,RxD);
+
+void setup(){
+  dht.begin();
+  Blue.begin(9600);
+  pinMode(KEY,OUTPUT);
+  pinMode(VCC,OUTPUT);
+  
+  digitalWrite(KEY,HIGH);
+  digitalWrite(VCC,LOW);
+  
+  digitalWrite(VCC,HIGH);
+  
+  Serial.begin(9600);
+}
+void loop(){
+  float h = dht.readHumidity(); //Se lee la humedad
+  float t = dht.readTemperature(); //Se lee la temperatura
+Serial.println(h);
+Serial.println(t);
+  delay(1000);
+  char comando = Blue.read();
+  switch(comando){
+    case 'r':
+    Blue.println(h);
+    Blue.println(t);
+    delay(1000);
+    break;
+}
+}
